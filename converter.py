@@ -30,8 +30,14 @@
 # @version 0.1, 18/08/21
 
 import os
+import argparse
 import yaml
 import jinja2 
+
+parser = argparse.ArgumentParser(description='This is a simple script that takes a YAML structured data file and creates a document using the data provided.')
+parser.add_argument('data', type=str, help='YAML data file to be used')
+parser.add_argument('template', type=str, help='templated HTML file to be used')
+args = parser.parse_args()
 
 # Initialize jinja environment
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -40,10 +46,10 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True)
 
 # Open our example data file and load it with yaml module. Variables in our template file will be substituted with these.
-with open('example_data.yml') as fd:
+with open(args.data) as fd:
     template_values = yaml.load(fd, Loader=yaml.FullLoader)
 
 # Get the template file and then render it with values taken on previous step. Than output resulting page code to terminal.
-template = JINJA_ENVIRONMENT.get_template('example_template.html')
+template = JINJA_ENVIRONMENT.get_template(args.template)
 site = template.render(template_values)
 print(f'{site}')
